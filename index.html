@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<title>O Mundo, Continente a Continente</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
+
+  :root{
+    --azulejo:#2C5F7C;
+    --azulejo-light:#DCE8ED;
+    --paper:#FAF7F0;
+    --vinho:#6B1E2B;
+    --ouro:#C9932E;
+    --ink:#1F2421;
+    --verde:#2E5339;
+
+    --c-europa:#2C5F7C;
+    --c-africa:#C9932E;
+    --c-asia:#3B6B47;
+    --c-america:#7B2D3B;
+    --c-oceania:#9A6534;
+
+    --cols:4;
+    --rows:8;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:#E9E4D8;
+    font-family:'Work Sans',sans-serif;
+    color:var(--ink);
+  }
+
+  /* ===================== FOLHA A4 ===================== */
+  .folha{
+    width:210mm;height:297mm;
+    background:var(--paper);
+    position:relative;
+    margin:0 auto 22px auto;
+    box-shadow:0 4px 24px rgba(0,0,0,0.15);
+    padding:14mm 14mm 12mm 14mm;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+
+  /* ===================== CAPA ===================== */
+  .capa{
+    align-items:center;justify-content:center;text-align:center;
+    background:var(--azulejo);color:var(--paper);
+  }
+  .capa .selo-grande{
+    width:132px;height:132px;border:3px solid var(--ouro);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:52px;margin-bottom:26px;
+  }
+  .capa h1{
+    font-family:'Fraunces',serif;font-weight:800;
+    font-size:44px;margin:0 0 10px 0;line-height:1.08;
+  }
+  .capa h2{
+    font-family:'Fraunces',serif;font-weight:500;font-style:italic;
+    font-size:18px;margin:0 0 40px 0;opacity:0.9;
+  }
+  .capa .subtitulo{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+    letter-spacing:2px;text-transform:uppercase;opacity:0.75;
+  }
+  .capa .colecao-linha{
+    margin-top:56px;font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.6;
+  }
+
+  /* ===================== SECÇÕES DE ABERTURA ===================== */
+  h2.titulo-secao{
+    font-family:'Fraunces',serif;font-size:26px;color:var(--azulejo);
+    border-bottom:3px solid var(--azulejo);padding-bottom:10px;margin:0 0 18px 0;
+  }
+  .intro-texto{font-size:14px;line-height:1.6;margin-bottom:16px;}
+  .intro-texto b{color:var(--azulejo);}
+
+  .bloco-explicado{
+    display:flex;gap:12px;align-items:flex-start;margin-bottom:11px;
+    padding:10px 12px;background:var(--azulejo-light);border-radius:6px;
+  }
+  .bloco-explicado .num{
+    font-family:'Fraunces',serif;font-weight:700;font-size:20px;
+    color:var(--azulejo);min-width:26px;
+  }
+  .bloco-explicado .txt>b{display:block;font-size:13px;margin-bottom:2px;}
+  .bloco-explicado .txt span{font-size:12px;color:#444;line-height:1.4;}
+  .bloco-explicado .txt span b{color:var(--azulejo);font-weight:600;}
+
+  .notas-redacao{
+    margin-top:auto;padding:12px 14px;background:#f7f2e8;
+    border:1px solid #e2ddd0;border-radius:6px;
+  }
+  .notas-redacao h3{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:1.2px;
+    text-transform:uppercase;color:var(--vinho);margin:0 0 8px 0;
+  }
+  .notas-redacao p,.notas-redacao li{font-size:11px;line-height:1.45;color:#463e33;}
+  .notas-redacao ul{margin:6px 0 0 16px;padding:0;}
+  .notas-redacao li{margin-bottom:5px;}
+
+  /* ===== mapa (mundo e continente) ===== */
+  .mapa-caixa{
+    background:var(--azulejo-light);border:1px solid var(--azulejo);
+    border-radius:8px;padding:8px 10px;
+  }
+  .mapa-caixa.plano{background:#fff;padding:4px;}
+  .mapa-caixa img{width:100%;height:auto;display:block;}
+  .mapa-legenda{
+    display:flex;gap:16px;flex-wrap:wrap;font-size:10.5px;margin-top:8px;
+    padding-top:8px;border-top:1px dashed #9db6c2;
+  }
+  .mapa-legenda .chip{display:flex;align-items:center;gap:6px;}
+  .mapa-legenda .sw{width:16px;height:11px;border-radius:2px;border:1px solid #0002;}
+
+  .mundo-factos{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+  .mundo-factos .facto{
+    background:#fff;border:1px solid #e2ddd0;border-radius:6px;
+    padding:7px 11px;font-size:11.5px;flex:1 1 30%;
+  }
+  .mundo-factos .facto b{
+    font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:0.8px;
+    text-transform:uppercase;color:var(--azulejo);display:block;margin-bottom:2px;
+  }
+
+  /* ===================== PÁGINA DE CONTINENTE ===================== */
+  .folha-cont{padding:12mm 12mm 10mm 12mm;color:var(--ink);}
+  .cont-cab{flex-shrink:0;margin-bottom:6px;}
+  .cont-cab .barra{height:7px;border-radius:4px;margin-bottom:8px;}
+  .cont-cab .linha{display:flex;align-items:baseline;justify-content:space-between;gap:12px;}
+  .cont-cab h1{
+    font-family:'Fraunces',serif;font-weight:800;font-size:30px;margin:0;line-height:1;
+  }
+  .cont-cab .contagem{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--vinho);
+    text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;
+  }
+  .cont-cab .mapa-caixa{margin:8px 0 6px 0;text-align:center;background:#fff;padding:2px;
+    border-color:#cfc7b3;}
+  .cont-cab .mapa-caixa img{max-height:82mm;max-width:100%;width:auto;margin:0 auto;}
+  .cont-cab .cont-intro{
+    font-size:11px;line-height:1.45;color:#3a3a3a;margin:0;
+  }
+
+  .cont-cab-mini{
+    display:flex;align-items:baseline;justify-content:space-between;
+    border-bottom:2px solid currentColor;padding-bottom:5px;margin-bottom:5mm;flex-shrink:0;
+  }
+  .cont-cab-mini .titulo{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  }
+  .cont-cab-mini .folio{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#8a8272;}
+
+  .grelha{
+    display:grid;
+    grid-template-columns:repeat(var(--cols),1fr);
+    grid-auto-rows:26mm;
+    gap:2.5mm;
+    align-content:start;margin-top:5px;
+  }
+
+  .cartao{
+    border:1px solid #ddd4c0;border-radius:5px;background:#fff;
+    padding:4px 5px;display:flex;flex-direction:column;
+    overflow:hidden;position:relative;
+  }
+  .cartao .topo{display:flex;gap:4px;align-items:flex-start;}
+  .cartao .bandeira{
+    width:24px;height:18px;object-fit:cover;flex-shrink:0;
+    border:1px solid #0003;border-radius:1.5px;background:#f0ece1;margin-top:1px;
+  }
+  .cartao h3{
+    font-family:'Fraunces',serif;font-size:10px;line-height:1.02;
+    margin:0;color:var(--ink);overflow-wrap:anywhere;
+  }
+  .cartao .endonimo{
+    font-family:'Fraunces',serif;font-style:italic;font-size:7.2px;
+    color:#7a7364;line-height:1.05;margin-top:1px;
+    display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .cartao .ficha{
+    margin-top:auto;padding-top:2px;
+    display:grid;grid-template-columns:auto 1fr;gap:0 4px;
+    font-size:7.6px;line-height:1.18;
+  }
+  .cartao .ficha dt{
+    font-family:'IBM Plex Mono',monospace;font-size:6px;letter-spacing:0.2px;
+    text-transform:uppercase;color:var(--azulejo);padding-top:1px;
+  }
+  .cartao .ficha dd{margin:0;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .cartao .ficha dd.num{-webkit-line-clamp:1;white-space:nowrap;}
+  .cartao .ficha .rk{color:var(--vinho);}
+  .cartao .sob{
+    font-family:'IBM Plex Mono',monospace;font-size:6px;color:#b0968a;
+    text-transform:uppercase;letter-spacing:0.2px;margin-top:1px;
+  }
+  .cartao .pin{
+    position:absolute;top:0;right:0;width:0;height:0;
+    border-top:11px solid currentColor;border-left:11px solid transparent;opacity:.45;
+  }
+
+  .cred-lista{columns:2;column-gap:16px;font-size:10px;line-height:1.5;color:#5a5145;}
+  .cred-item{break-inside:avoid;margin-bottom:6px;}
+  .cred-item b{color:var(--ink);}
+
+  .folha-branca{background:var(--paper);}
+
+  /* ===================== IMPRESSÃO ===================== */
+  @page{size:A4;margin:0;}
+  @media print{
+    body{background:#fff;}
+    .folha{margin:0;box-shadow:none;page-break-after:always;break-after:page;}
+    .folha:last-child{page-break-after:auto;}
+  }
+</style>
+</head>
+<body>
+
+<!-- 1 · CAPA -->
+<div class="folha capa">
+  <div class="subtitulo">Uma coleção para conhecer</div>
+  <div class="selo-grande">🌍</div>
+  <h1>O Mundo,<br>Continente a Continente</h1>
+  <h2>Todos os países da Terra — bandeira, capital e língua, num cartão cada um</h2>
+  <div class="colecao-linha">Feito em família · sem fins comerciais</div>
+</div>
+
+<div class="folha folha-branca"></div>
+
+<!-- 2 · COMO LER -->
+<div class="folha">
+  <h2 class="titulo-secao">📖 Como ler este livro</h2>
+  <p class="intro-texto">O livro está organizado <b>continente a continente</b>. Cada continente começa com um <b>mapa</b>, onde se veem todos os seus países, e a seguir vêm os <b>cartões</b> — um por país, sempre com a mesma informação, por ordem alfabética.</p>
+
+  <div class="bloco-explicado">
+    <div class="num">1</div>
+    <div class="txt"><b>Mapa-mundo</b><span>Primeiro, o planeta inteiro: os seis continentes, cada um com a sua cor, e os oceanos.</span></div>
+  </div>
+  <div class="bloco-explicado">
+    <div class="num">2</div>
+    <div class="txt"><b>Mapa do continente</b><span>Antes dos cartões, um mapa só desse continente com os países identificados pelo nome.</span></div>
+  </div>
+  <div class="bloco-explicado">
+    <div class="num">3</div>
+    <div class="txt"><b>Cartão do país</b><span>A <b>bandeira</b>, o <b>nome</b> em português, o <b>endónimo</b> (o nome do país na sua própria língua), a <b>capital</b>, a <b>língua</b> oficial, a <b>área</b> e a <b>população</b>. A seguir à área e à população vem a sua <b>posição no mundo</b> (ex.: <i>· 92.º</i> = o 92.º maior). Os rankings contam só os países independentes.</span></div>
+  </div>
+  <div class="bloco-explicado">
+    <div class="num">4</div>
+    <div class="txt"><b>O cantinho colorido</b><span>Os cartões com um canto dobrado no topo direito são <b>territórios</b> — não são países independentes, mas têm bandeira própria. A quem pertencem vem escrito no fim do cartão.</span></div>
+  </div>
+
+  <div class="notas-redacao">
+    <h3>Notas de redação</h3>
+    <p>Este projeto nasceu com um propósito familiar e pedagógico: partilhar conhecimento de forma acessível, bonita e próxima do leitor. O texto foi elaborado com recurso a IA e, embora revisto com atenção, não deve ser tratado como fonte definitiva.</p>
+    <ul>
+      <li>Contam-se <b>os 193 Estados-membros da ONU</b> mais o <b>Vaticano</b>, a <b>Palestina</b> e o <b>Kosovo</b>, e ainda alguns <b>territórios</b> com bandeira própria. A divisão da América num só continente e a lista de países seguem o modelo escolar português; nem todas as fronteiras e estatutos são consensuais.</li>
+      <li>Continentes usados: <b>América, Europa, África, Ásia, Oceânia</b> e <b>Antártida</b> (esta só no mapa-mundo, por não ter países).</li>
+      <li>Bandeiras: conjunto <b>flag-icons</b> (lipis, MIT / domínio público). Mapas: <b>"Blank world map, Equal Earth projection"</b>, de Justinkunimune (Wikimedia Commons, CC0), recortados e rotulados — projeção de áreas iguais, que não encolhe o hemisfério sul.</li>
+      <li>Área e população são valores recentes e arredondados (fonte: Wikidata; para os países europeus, os mesmos números do livro <i>A Europa, País a País</i>). Servem para dar ordens de grandeza, não são exatos ao habitante. A área da França é a do território europeu (metropolitano).</li>
+      <li>Este material não tem intenção comercial e não deve ser vendido.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="folha folha-branca"></div>
+
+<!-- 3 · MAPA-MUNDO -->
+<div class="folha">
+  <h2 class="titulo-secao">🌍 O planeta Terra</h2>
+  <p class="intro-texto">A Terra tem terra a menos e água a mais: os <b>oceanos</b> cobrem cerca de <b>sete décimos</b> da superfície. O resto está repartido pelos <b>continentes</b>.</p>
+  <div class="mapa-caixa plano">
+    <img src="mapas/mundo.svg" alt="Mapa-mundo com os continentes e os oceanos">
+    <div class="mapa-legenda" id="legenda-mundo"></div>
+  </div>
+  <div class="mundo-factos" id="mundo-factos"></div>
+  <ul class="cont-factos" style="border-color:var(--azulejo);margin-top:auto">
+    <li><b>Porquê este mapa é diferente?</b> Usa a projeção <b>Equal Earth</b>, que mostra cada país com o tamanho certo em relação aos outros. Nos mapas mais comuns, a Gronelândia parece do tamanho de África — aqui vê-se que África é <b>catorze vezes maior</b>.</li>
+    <li>Os <b>continentes</b> são os grandes blocos de terra; os <b>oceanos</b> são as grandes massas de água que os separam e ligam.</li>
+    <li>A <b>Antártida</b>, no fundo do mapa, é um continente gelado sem países nem população fixa — por isso não tem cartões neste livro.</li>
+  </ul>
+</div>
+
+<!-- CONTINENTES + CARTÕES (gerados por JS) -->
+<div id="saida"></div>
+
+<script src="dados-paises.js"></script>
+<script>
+/* =========================================================================
+   CONFIGURAÇÃO
+   ------------------------------------------------------------------------- */
+const CONFIG = {
+  colunas: 5,
+  cartoesPrimeiraPagina: 25,   // debaixo do mapa, na 1.ª folha do continente
+  cartoesPorFolha: 35,         // folhas seguintes (só cartões)
+  bandeirasBase: 'https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.5.0/flags/4x3/',
+  ordemContinentes: ['europa','africa','asia','america','oceania'],
+  titulo: 'O Mundo, Continente a Continente'
+};
+
+const CONTINENTES = {
+  europa:  { nome:'Europa',  cor:'var(--c-europa)',  emoji:'🏰',
+    intro:'O mais pequeno dos continentes habitados, mas com muitos países lado a lado. Da tundra do norte ao Mediterrâneo, cabe aqui de tudo — e Portugal fica num dos seus cantos, virado para o Atlântico.',
+    factos:[
+      'O <b>Vaticano</b> é o país mais pequeno do mundo: cabe num bairro de Roma.',
+      'A <b>Rússia</b> é o maior país do planeta — mas só uma parte está na Europa; a maior parte fica na Ásia.',
+      'Vários países não têm mar nenhum: Áustria, Suíça, Hungria, Chéquia, Eslováquia, entre outros.' ] },
+  africa:  { nome:'África',  cor:'var(--c-africa)',  emoji:'🦁',
+    intro:'O segundo maior continente e o mais jovem em idade média. Tem o maior deserto quente do mundo (o Sara) e o rio mais longo (o Nilo). O português é língua oficial em seis países africanos.',
+    factos:[
+      'Fala-se <b>português</b> em Angola, Moçambique, Cabo Verde, Guiné-Bissau, São Tomé e Príncipe e Guiné Equatorial.',
+      'A <b>Argélia</b> é o maior país de África; a <b>Nigéria</b> é o que tem mais gente.',
+      'O <b>Lesoto</b> e <b>Essuatíni</b> estão inteirinhos dentro da África do Sul.' ] },
+  asia:    { nome:'Ásia',    cor:'var(--c-asia)',    emoji:'🐘',
+    intro:'O maior continente, tanto em terra como em gente: vivem aqui mais de seis em cada dez pessoas do planeta. Tem a montanha mais alta do mundo, o Evereste.',
+    factos:[
+      'A <b>China</b> e a <b>Índia</b> são os dois países com mais habitantes do mundo.',
+      'O ponto mais baixo de terra firme fica junto ao <b>mar Morto</b>, entre Israel e a Jordânia.',
+      'A <b>Turquia</b> e o <b>Cazaquistão</b> têm um pé na Ásia e outro na Europa.' ] },
+  america: { nome:'América', cor:'var(--c-america)', emoji:'🗽',
+    intro:'Um continente que vai de um círculo polar ao outro, do Ártico canadiano à Patagónia. Tem a cordilheira mais comprida do mundo (os Andes) e a maior floresta tropical (a Amazónia).',
+    factos:[
+      'O <b>Canadá</b> é o maior país da América; o <b>Brasil</b> é o maior da América do Sul e o que fala português.',
+      'A <b>Gronelândia</b> é a maior ilha do mundo — pertence à Dinamarca, mas fica na América.',
+      'Muitos países da América Central e das Caraíbas são ilhas pequenas com poucos habitantes.' ] },
+  oceania: { nome:'Oceânia', cor:'var(--c-oceania)', emoji:'🐨',
+    intro:'O continente mais pequeno e o mais espalhado: uma grande ilha-continente (a Austrália) e milhares de ilhas semeadas pelo oceano Pacífico.',
+    factos:[
+      'A <b>Austrália</b> é ao mesmo tempo um país, uma ilha e (quase) um continente.',
+      '<b>Nauru</b> e <b>Tuvalu</b> estão entre os países mais pequenos do mundo, logo a seguir ao Vaticano e ao Mónaco.',
+      'Ilhas como <b>Samoa</b> e <b>Tonga</b> ficam do outro lado da linha internacional de mudança de data.' ] },
+};
+
+const PAISES = window.PAISES || [];
+const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const porNome = (a,b) => norm(a.nome).localeCompare(norm(b.nome),'pt');
+
+function doContinente(c){
+  return PAISES.filter(p=>p.continente===c).sort(porNome);
+}
+
+/* --- rankings mundiais (s\u00f3 entre Estados soberanos) --- */
+function rankMundial(campo){
+  const estados = PAISES.filter(p=>!p.soberania && typeof p[campo]==='number');
+  estados.sort((a,b)=> b[campo]-a[campo]);
+  const m = new Map();
+  estados.forEach((p,i)=> m.set(p, i+1));
+  return m;
+}
+const rankPop  = rankMundial('populacao');
+const rankArea = rankMundial('area');
+const totalEstados = PAISES.filter(p=>!p.soberania).length;
+
+/* --- formata\u00e7\u00e3o de n\u00fameros (pt-PT) --- */
+const grupos = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'\u202f');
+function fmtPop(n){
+  if(n == null) return '\u2014';
+  if(n >= 1e9){
+    const v = n/1e9;
+    return (v>=10 ? v.toFixed(1) : v.toFixed(2)).replace(/0$/,'').replace(/\.$/,'')
+           .replace('.', ',') + ' mil milh\u00f5es';
+  }
+  if(n >= 1e6){
+    const v = n/1e6;
+    let s;
+    if(v >= 100)      s = String(Math.round(v));
+    else if(v >= 10)  s = v.toFixed(1).replace(/\.0$/, '');
+    else              s = v.toFixed(2).replace(/0$/, '').replace(/\.$/, '');
+    return s.replace('.', ',') + ' milh\u00f5es';
+  }
+  if(n >= 1000) return grupos(n) + ' hab.';
+  return n + ' hab.';
+}
+function fmtArea(n){
+  if(n == null) return '\u2014';
+  if(n < 10) return (''+n).replace('.', ',') + ' km\u00b2';
+  return grupos(n) + ' km\u00b2';
+}
+const ord = n => n + '.\u00ba';
+
+/* --- cartão mínimo --- */
+function cartao(p){
+  const el = document.createElement('article');
+  el.className = 'cartao';
+  const endo = (p.endonimo && p.endonimo !== p.nome)
+    ? `<div class="endonimo">${p.endonimo}</div>` : '';
+  const sob = p.soberania
+    ? `<div class="sob">${p.soberania}</div><div class="pin"></div>` : '';
+  el.innerHTML = `
+    <div class="topo">
+      <img class="bandeira" loading="lazy"
+           src="${CONFIG.bandeirasBase}${p.iso}.svg"
+           alt="Bandeira: ${p.nome}"
+           onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'bandeira',textContent:'${p.iso.toUpperCase()}',style:'display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:7px;color:#777'}))">
+      <div><h3>${p.nome}</h3>${endo}</div>
+    </div>
+    <dl class="ficha">
+      <dt>Cap.</dt><dd>${p.capital || '—'}</dd>
+      <dt>Líng.</dt><dd>${p.idioma || '—'}</dd>
+      <dt>Área</dt><dd class="num">${fmtArea(p.area)}${rankArea.has(p) ? ` <span class="rk">· ${ord(rankArea.get(p))}</span>` : ''}</dd>
+      <dt>Pop.</dt><dd class="num">${fmtPop(p.populacao)}${rankPop.has(p) ? ` <span class="rk">· ${ord(rankPop.get(p))}</span>` : ''}</dd>
+    </dl>
+    ${sob}`;
+  return el;
+}
+
+/* --- folhas de um continente: 1.ª com o mapa + cartões, seguintes só cartões --- */
+function folhasContinente(c, lista){
+  const info = CONTINENTES[c];
+  const nEstados = lista.filter(p=>!p.soberania).length;
+  const nTerr = lista.length - nEstados;
+  const terrTxt = nTerr ? ` · ${nTerr} ${nTerr===1?'território':'territórios'}` : '';
+
+  const n1 = CONFIG.cartoesPrimeiraPagina;
+  const nRest = CONFIG.cartoesPorFolha;
+  const out = [];
+
+  // 1.ª folha
+  const f1 = document.createElement('div');
+  f1.className = 'folha folha-cont';
+  f1.style.color = info.cor;
+  const cab = document.createElement('div');
+  cab.className = 'cont-cab';
+  cab.innerHTML = `
+    <div class="barra" style="background:${info.cor}"></div>
+    <div class="linha">
+      <h1>${info.emoji} ${info.nome}</h1>
+      <span class="contagem">${nEstados} países${terrTxt}</span>
+    </div>
+    <div class="mapa-caixa">
+      <img src="mapas/${c}.svg" alt="Mapa de ${info.nome} com os países identificados">
+    </div>
+    <p class="cont-intro">${info.intro}</p>`;
+  f1.appendChild(cab);
+  const g1 = document.createElement('div');
+  g1.className = 'grelha';
+  lista.slice(0, n1).forEach(p => g1.appendChild(cartao(p)));
+  f1.appendChild(g1);
+  out.push(f1);
+
+  // folhas seguintes
+  let i = n1, folio = 2;
+  const totalFolhas = 1 + Math.ceil(Math.max(0, lista.length - n1) / nRest);
+  while(i < lista.length){
+    const f = document.createElement('div');
+    f.className = 'folha folha-cont';
+    f.style.color = info.cor;
+    const mini = document.createElement('div');
+    mini.className = 'cont-cab-mini';
+    mini.innerHTML = `<span class="titulo">${info.emoji} ${info.nome} · país a país</span>
+      <span class="folio">${folio}/${totalFolhas}</span>`;
+    f.appendChild(mini);
+    const g = document.createElement('div');
+    g.className = 'grelha';
+    lista.slice(i, i + nRest).forEach(p => g.appendChild(cartao(p)));
+    f.appendChild(g);
+    out.push(f);
+    i += nRest; folio++;
+  }
+
+  if(out.length > 2){
+    console.warn(`${info.nome}: ${lista.length} países ocupam ${out.length} folhas (>2). `
+      + `Aumenta CONFIG.cartoesPorFolha ou reduz o mapa.`);
+  }
+  return out;
+}
+
+/* --- legenda do mapa-mundo --- */
+function legendaMundo(){
+  const alvo = document.getElementById('legenda-mundo');
+  const cores = {
+    'América':'var(--c-america)','Europa':'var(--c-europa)','África':'var(--c-africa)',
+    'Ásia':'var(--c-asia)','Oceânia':'var(--c-oceania)','Antártida':'#AEC3CD'
+  };
+  alvo.innerHTML = Object.entries(cores).map(([n,c])=>
+    `<div class="chip"><span class="sw" style="background:${c}"></span>${n}</div>`).join('');
+}
+
+/* --- factos do mapa-mundo --- */
+function factosMundo(){
+  const alvo = document.getElementById('mundo-factos');
+  const nEstados = PAISES.filter(p=>!p.soberania).length;
+  const nTerr = PAISES.length - nEstados;
+  const factos = [
+    ['Países no livro', `${nEstados}`],
+    ['+ territórios', `${nTerr}`],
+    ['Continentes', '6 (a Antártida não tem países)'],
+    ['Oceanos', '5 — Pacífico, Atlântico, Índico, Glacial Ártico e Glacial Antártico'],
+    ['Maior continente', 'Ásia'],
+    ['Continente mais pequeno', 'Oceânia'],
+  ];
+  alvo.innerHTML = factos.map(([t,v])=>
+    `<div class="facto"><b>${t}</b><span>${v}</span></div>`).join('');
+}
+
+/* --- página de créditos --- */
+function folhaCreditos(){
+  const folha = document.createElement('div');
+  folha.className = 'folha';
+  folha.innerHTML = `
+    <h2 class="titulo-secao">🗂️ Fontes e créditos</h2>
+    <p class="intro-texto">Este livro reúne informação de referência de domínio público e materiais com licença livre.</p>
+    <div class="cred-lista">
+      <div class="cred-item"><b>Bandeiras</b> — conjunto <i>flag-icons</i> de Panayiotis Lipiridis (lipis) e colaboradores. Licença MIT / domínio público. github.com/lipis/flag-icons</div>
+      <div class="cred-item"><b>Mapas</b> — "Blank world map, Equal Earth projection", de <i>Justinkunimune</i>. Wikimedia Commons, CC0 1.0 (domínio público). Recortados por continente e rotulados para este livro. A projeção Equal Earth mantém as áreas proporcionais — a África e a América do Sul aparecem com o tamanho real relativamente à Europa.</div>
+      <div class="cred-item"><b>Nomes, capitais e endónimos</b> — compilados a partir de fontes de referência (Wikipédia, listas da ONU) e revistos manualmente. Os endónimos, para línguas de outro alfabeto, dão a romanização e, quando possível, a grafia original.</div>
+      <div class="cred-item"><b>Área e população</b> — valores recentes e arredondados (fonte: Wikidata; para os países europeus, os mesmos números do livro <i>A Europa, País a País</i>). A posição no mundo (ranking) conta apenas os países independentes. A área da França refere-se ao território europeu.</div>
+      <div class="cred-item"><b>Tipos de letra</b> — Fraunces, Work Sans e IBM Plex Mono (Google Fonts, licenças abertas).</div>
+      <div class="cred-item"><b>Redação</b> — textos elaborados com recurso a IA e revistos. Sem valor oficial. Sem fins comerciais.</div>
+    </div>`;
+  return folha;
+}
+
+/* --- montagem --- */
+function render(){
+  document.documentElement.style.setProperty('--cols', CONFIG.colunas);
+  const saida = document.getElementById('saida');
+
+  if(!PAISES.length){
+    saida.innerHTML = '<div class="folha"><h2 class="titulo-secao">Sem dados</h2>'
+      + '<p class="intro-texto">O ficheiro <b>dados-paises.js</b> não foi carregado.</p></div>';
+    return;
+  }
+
+  legendaMundo();
+  factosMundo();
+
+  for(const c of CONFIG.ordemContinentes){
+    const lista = doContinente(c);
+    if(!lista.length) continue;
+    for(const f of folhasContinente(c, lista)) saida.appendChild(f);
+  }
+  saida.appendChild(folhaCreditos());
+}
+
+render();
+
+/* --- pré-visualização de uma só página:  ...html#p7  --- */
+(function(){
+  const m = (location.hash||'').match(/^#p(\d+)/);
+  if(!m) return;
+  const n = +m[1];
+  document.querySelectorAll('.folha').forEach((f,i)=>{
+    f.style.display = (i === n-1) ? '' : 'none';
+  });
+})();
+</script>
+</body>
+</html>
