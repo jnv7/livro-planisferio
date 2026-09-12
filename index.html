@@ -69,6 +69,15 @@
   .capa .colecao-linha{
     margin-top:56px;font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.6;
   }
+  .capa .capa-qr{
+    margin-top:22px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  }
+  .capa .capa-qr .qr-caixa{
+    background:var(--paper);padding:8px;border-radius:8px;line-height:0;
+  }
+  .capa .capa-url{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.5px;opacity:0.85;
+  }
 
   /* ===================== SECÇÕES DE ABERTURA ===================== */
   h2.titulo-secao{
@@ -227,6 +236,10 @@
   <h1>O Mundo,<br>Continente a Continente</h1>
   <h2>Todos os países da Terra — bandeira, capital e língua, num cartão cada um</h2>
   <div class="colecao-linha">Feito em família · sem fins comerciais</div>
+  <div class="capa-qr">
+    <div class="qr-caixa" id="qr-capa"></div>
+    <div class="capa-url">jnvasconcelos.com/livro-planisferio</div>
+  </div>
 </div>
 
 <div class="folha folha-branca"></div>
@@ -287,6 +300,7 @@
 <!-- CONTINENTES + CARTÕES (gerados por JS) -->
 <div id="saida"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="dados-paises.js"></script>
 <script>
 /* =========================================================================
@@ -537,6 +551,13 @@ function render(){
 }
 
 render();
+
+new QRCode(document.getElementById('qr-capa'), {
+  text: 'https://www.jnvasconcelos.com/livro-planisferio',
+  width: 84, height: 84,
+  colorDark: '#000000', colorLight: '#ffffff',
+  correctLevel: QRCode.CorrectLevel.M
+});
 
 /* --- pré-visualização de uma só página:  ...html#p7  --- */
 (function(){
