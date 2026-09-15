@@ -2,6 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>O Mundo, Continente a Continente</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
@@ -224,6 +225,53 @@
     body{background:#fff;}
     .folha{margin:0;box-shadow:none;page-break-after:always;break-after:page;}
     .folha:last-child{page-break-after:auto;}
+  }
+
+  /* ===================== VISTA TELEMÓVEL (só ecrã, não afeta impressão) =====================
+     As folhas mantêm o formato A4 fixo para impressão; em ecrãs estreitos passam a
+     largura fluida e altura automática, e a grelha densa de cartões (5 colunas,
+     pensada para caber muitos países numa só folha A4) passa a uma coluna legível. */
+  @media screen and (max-width:700px){
+    .folha{
+      width:100%;
+      max-width:100%;
+      height:auto;
+      min-height:0;
+      margin:0 0 16px 0;
+      padding:22px 16px;
+      box-shadow:none;
+      border-bottom:10px solid #ddd6c6;
+      overflow:visible;
+    }
+    .folha-branca{display:none;}
+
+    .capa{padding:48px 20px;}
+    .capa h1{font-size:28px;}
+    .capa h2{font-size:14px;}
+    .capa .selo-grande{width:104px;height:104px;font-size:44px;margin-bottom:20px;}
+
+    .titulo-secao{font-size:22px;}
+
+    .mapa-legenda{gap:10px;}
+    .mundo-factos .facto{flex:1 1 100%;}
+
+    .cont-cab h1{font-size:26px;}
+    .cont-cab .linha{flex-wrap:wrap;}
+    .cont-cab .mapa-caixa img{max-height:none;}
+
+    /* cartões de país: uma coluna, texto maior (a grelha densa é pensada para a A4) */
+    .grelha{grid-template-columns:1fr;grid-auto-rows:auto;gap:10px;}
+    .cartao{padding:12px 14px;}
+    .cartao .bandeira{width:34px;height:25px;}
+    .cartao h3{font-size:16px;line-height:1.2;}
+    .cartao .endonimo{font-size:11px;-webkit-line-clamp:2;}
+    .cartao .ficha{font-size:11px;line-height:1.4;grid-template-columns:64px 1fr;gap:2px 8px;}
+    .cartao .ficha dt{font-size:9px;}
+    .cartao .ficha dd{-webkit-line-clamp:3;}
+    .cartao .sob{font-size:9px;}
+    .cartao .pin{border-top-width:16px;border-left-width:16px;}
+
+    .cred-lista{columns:1;font-size:12px;}
   }
 </style>
 </head>
